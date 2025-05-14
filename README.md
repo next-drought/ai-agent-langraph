@@ -1,118 +1,69 @@
-# LangGraph Medium Article Analyzer Agent
+# Medium Article Analyzer - Go Implementation
 
-This project implements a text analysis agent using LangGraph, as described in the Data Science Collective article "The Complete Guide to Building Your First AI Agent with LangGraph."
+A Go-based text analysis tool that uses local LLMs through Ollama to analyze articles and text content.
 
-The agent can:
-1.  Classify a given text into predefined categories (News, Blog, Research, Other).
-2.  Extract named entities (Person, Organization, Location) from the text.
-3.  Generate a concise summary of the text.
+## Features
 
-## Project Structure
+The analyzer can:
+1. Classify a given text into predefined categories (News, Blog, Research, Other)
+2. Extract named entities (Person, Organization, Location) from the text
+3. Generate a concise summary of the text
 
-```
-ai_agent_project/
-├── agent_env/              # Virtual environment directory
-├── .env                    # For API keys and environment variables
-├── agent.py                # Main script for the agent
-├── requirements.txt        # Python dependencies
-├── test_setup.py           # Script to test environment setup
-└── README.md               # This file
-```
+## Requirements
+
+- Go 1.18 or higher
+- Ollama running locally with a compatible model (tested with DeepSeek)
 
 ## Setup Instructions
 
-Follow these steps to set up and run the agent on your local machine.
+### 1. Install Go
+Make sure you have Go installed on your system. You can download it from [golang.org](https://golang.org/dl/).
 
-### 1. Create Project Directory
-Open your terminal or command prompt and run:
+### 2. Set up Ollama
+Install Ollama from [ollama.ai](https://ollama.ai) and pull the DeepSeek model:
+
 ```bash
-mkdir ai_agent_project
-cd ai_agent_project
+ollama pull deepseek-r1:8b
 ```
-*(This script handles this step if you run it in the desired parent directory)*
 
-### 2. Create and Activate Virtual Environment
+### 3. Run the analyzer
+Clone this repository and use the provided Makefile:
 
-* **On macOS/Linux:**
-    ```bash
-    python3 -m venv agent_env
-    source agent_env/bin/activate
-    ```
-* **On Windows:**
-    ```bash
-    python -m venv agent_env
-    .\agent_env\Scripts\activate
-    ```
-    *(If `python3` or `python` doesn't work, ensure Python is installed and added to your system's PATH.)*
-*(This script handles creation and activation for Unix-like systems)*
-
-### 3. Install Necessary Packages
-With your virtual environment activated, install the required libraries:
 ```bash
-pip install -r requirements.txt
+git clone https://github.com/next-drought/ai-agent-langraph.git
+cd ai-agent-langraph
+make run
 ```
-*(This script handles this step)*
 
-### 4. Create `requirements.txt`
-Create a file named `requirements.txt` in your `ai_agent_project` directory and add the content:
-```text
-langgraph
-langchain
-langchain-openai
-python-dotenv
-```
-*(This script handles this step)*
+## Usage
 
-### 5. Set Up OpenAI API Key
+The application comes with a Makefile that provides several commands:
 
-* Create a file named `.env` in the `ai_agent_project` directory.
-* Add your OpenAI API key to this file:
-    ```
-    OPENAI_API_KEY=your-actual-openai-api-key-here
-    ```
-    Replace `your-actual-openai-api-key-here` with your real OpenAI API key.
-*(This script creates a template .env file. You MUST edit it.)*
-
-### 6. Create `test_setup.py`
-Create a file named `test_setup.py` in your `ai_agent_project` directory with the provided test script content.
-*(This script handles this step)*
-
-### 7. Test Your Environment Setup
-Run the test script to ensure your environment and API key are configured correctly:
 ```bash
-python test_setup.py
+make run         # Run the application
+make build       # Build the application
+make test        # Test the application
+make clean       # Clean build artifacts
+make check-ollama # Check if Ollama is running
+make help        # Show available commands
 ```
-If you see a response from the LLM (e.g., "Hello! I am working."), your setup is correct. **Remember to edit the `.env` file with your API key first!**
 
-### 8. Create `agent.py`
-Create a file named `agent.py` in your `ai_agent_project` directory with the provided agent script content.
-*(This script handles this step)*
+## How It Works
 
-## Running the Agent
+The analyzer follows a sequential workflow:
 
-Once everything is set up AND you have edited the `.env` file with your API key, you can run the agent:
+1. **Classification**: Determines the type of content (News, Blog, Research, Other)
+2. **Entity Extraction**: Identifies people, organizations, and locations mentioned in the text
+3. **Summarization**: Creates a concise summary of the content
 
-1.  Ensure your virtual environment (`agent_env`) is activated.
-    ```bash
-    # If not active:
-    # On macOS/Linux:
-    # source agent_env/bin/activate
-    # On Windows:
-    # .\agent_env\Scripts\activate
-    ```
-2.  Run the test script first (after editing `.env`):
-    ```bash
-    python test_setup.py
-    ```
-3.  If the test is successful, run the main agent script:
-    ```bash
-    python agent.py
-    ```
+All processing is done locally using the Ollama API, with no data sent to external services.
 
-The script will output the classification, extracted entities, and summary for the sample text. You can modify the `sample_text` variable in `agent.py` to analyze different articles.
+## Customization
 
-## Deactivating the Virtual Environment
-When you're done working on the project, you can deactivate the virtual environment:
-```bash
-deactivate
+You can modify the model used by changing the `model` variable in `main.go`:
+
+```go
+model := "your-preferred-model" // Replace with any model available in your Ollama installation
 ```
+
+You can also adjust the prompts in each function to customize how the LLM processes the text.
